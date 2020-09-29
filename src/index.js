@@ -14,7 +14,7 @@ class CountdownTimer {
     this.targetDate = targetDate;
     this.dateInFuture = this.targetDate.getTime();
     this.intervalId = null;
-    this.isActive = true;
+    this.isActive = false;
   }
 
   updateClock(deltaTime) {
@@ -39,32 +39,34 @@ class CountdownTimer {
 
   startCounter() {
     if (this.isActive) {
-      this.isActive = false;
-      this.intervalId = setInterval(() => {
-        const currentTime = Date.now();
-        const differenceInTime = this.dateInFuture - currentTime;
-        this.updateClock(differenceInTime);
-        this.checkClock(currentTime);
-      }, 1000);
+      return;
     }
+    this.isActive = true;
+    this.intervalId = setInterval(() => {
+      const currentTime = Date.now();
+      const differenceInTime = this.dateInFuture - currentTime;
+      this.updateClock(differenceInTime);
+      this.checkClock(currentTime);
+    }, 1000);
   }
 
   checkClock(currentTime) {
-    if (this.dateInFuture <= currentTime) {
-      const hpbElement = document.createElement('div');
-      hpbElement.textContent = 'Happy Birthday to me !';
-      hpbElement.classList.add('title');
-      bodyRef.appendChild(hpbElement);
-      clearInterval(this.intervalId);
-      daysCounterRef.textContent = 0;
-      hoursCounterRef.textContent = 0;
-      minutesCounterRef.textContent = 0;
-      secondsCounterRef.textContent = 0;
+    if (this.dateInFuture >= currentTime) {
+      return;
     }
+    const hpbElement = document.createElement('div');
+    hpbElement.textContent = 'Happy Birthday to me !';
+    hpbElement.classList.add('title');
+    bodyRef.appendChild(hpbElement);
+    clearInterval(this.intervalId);
+    daysCounterRef.textContent = 0;
+    hoursCounterRef.textContent = 0;
+    minutesCounterRef.textContent = 0;
+    secondsCounterRef.textContent = 0;
   }
 
   stopCounter() {
-    this.isActive = true;
+    this.isActive = false;
     clearInterval(this.intervalId);
   }
 }
